@@ -1,6 +1,6 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="917.333333333333,802.666666666667" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Main" mva:VisualBasic.Settings="{x:Null}" sap:VirtualizedContainerService.HintSize="917.333333333333,802.666666666667" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
-    <scg:List x:TypeArguments="x:String" Capacity="23">
+    <scg:List x:TypeArguments="x:String" Capacity="24">
       <x:String>System.Activities</x:String>
       <x:String>System.Activities.Statements</x:String>
       <x:String>System.Activities.Expressions</x:String>
@@ -24,10 +24,11 @@
       <x:String>System.Windows.Markup</x:String>
       <x:String>UiPath.Excel</x:String>
       <x:String>System.Xml.Serialization</x:String>
+      <x:String>Newtonsoft.Json.Linq</x:String>
     </scg:List>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
-    <scg:List x:TypeArguments="AssemblyReference" Capacity="17">
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="18">
       <AssemblyReference>System.Activities</AssemblyReference>
       <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
@@ -45,6 +46,7 @@
       <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
       <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
       <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
   <Flowchart DisplayName="Encontrar RowIndex - Flowchart" sap:VirtualizedContainerService.HintSize="927.333333333333,638" sap2010:WorkflowViewState.IdRef="Flowchart_1">
@@ -68,11 +70,14 @@
           <av:Size x:Key="ShapeSize">200,68</av:Size>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <Sequence DisplayName="Inicio - Fluxo " sap:VirtualizedContainerService.HintSize="376,782.666666666667" sap2010:WorkflowViewState.IdRef="Sequence_1">
+      <Sequence DisplayName="Inicio - Fluxo " sap:VirtualizedContainerService.HintSize="376,1278" sap2010:WorkflowViewState.IdRef="Sequence_1">
         <Sequence.Variables>
           <Variable x:TypeArguments="sd:DataTable" Name="v_DtTeste" />
           <Variable x:TypeArguments="sd:DataRow[]" Name="v_Retorno" />
           <Variable x:TypeArguments="x:Int32" Name="v_RowIndex" />
+          <Variable x:TypeArguments="x:String" Name="jsonParsinLAS" />
+          <Variable x:TypeArguments="njl:JArray" Name="jOutLAS" />
+          <Variable x:TypeArguments="x:String" Name="v_ColIniDados" />
         </Sequence.Variables>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -80,6 +85,23 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
         <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[v_DtTeste]" DisplayName="Ler Planilha - Read Range" sap:VirtualizedContainerService.HintSize="334,86.6666666666667" sap2010:WorkflowViewState.IdRef="ReadRange_1" SheetName="Plan1" WorkbookPath="D:\testeUipath\testeID.xlsx" />
+        <ui:ReadTextFile Content="[jsonParsinLAS]" DisplayName="jsonRead - read TextFile" FileName="D:\testeUipath\configLasARC.json" sap:VirtualizedContainerService.HintSize="334,52" sap2010:WorkflowViewState.IdRef="ReadTextFile_1">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+              <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+        </ui:ReadTextFile>
+        <ui:DeserializeJsonArray DisplayName="array - Deserialize JSON Array" sap:VirtualizedContainerService.HintSize="334,61.3333333333333" sap2010:WorkflowViewState.IdRef="DeserializeJsonArray_1" JsonArray="[jOutLAS]" JsonString="[jsonParsinLAS]" />
+        <Assign DisplayName="get - ColIniDados" sap:VirtualizedContainerService.HintSize="334,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_3">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">[v_ColIniDados]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">[jOutLAS(0).item("ColIniDados").ToString]</InArgument>
+          </Assign.Value>
+        </Assign>
         <Assign DisplayName="Retorno - Assign" sap:VirtualizedContainerService.HintSize="334,61.3333333333333" sap2010:WorkflowViewState.IdRef="Assign_1">
           <Assign.To>
             <OutArgument x:TypeArguments="sd:DataRow[]">[v_Retorno]</OutArgument>
@@ -96,10 +118,12 @@
             <InArgument x:TypeArguments="x:Int32">[v_DtTeste.Rows.IndexOf(v_Retorno(0))]</InArgument>
           </Assign.Value>
         </Assign>
+        <WriteLine DisplayName="Json- Write Line" sap:VirtualizedContainerService.HintSize="334,62" sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="[&quot;Coluna Inicial = &quot; + v_ColIniDados.ToString]" />
         <WriteLine DisplayName="Item1- Write Line" sap:VirtualizedContainerService.HintSize="334,62" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;Posição RowIndex(1) = &quot; + (v_DtTeste.Rows.IndexOf(v_Retorno(1)) + 1).tostring]" />
         <WriteLine DisplayName="Item 2 - Write Line" sap:VirtualizedContainerService.HintSize="334,62" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Posição RowIndex(0) = &quot; + (v_DtTeste.Rows.IndexOf(v_Retorno(0)) + 1).tostring]" />
         <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" DisplayName="Msg1- Message Box" sap:VirtualizedContainerService.HintSize="334,58.6666666666667" sap2010:WorkflowViewState.IdRef="MessageBox_1" Text="[v_Retorno(0).ItemArray(0).toString + &quot;-&quot; + v_Retorno(0).ItemArray(1).toString]" />
         <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" DisplayName="Msg2 - Message Box" sap:VirtualizedContainerService.HintSize="334,58.6666666666667" sap2010:WorkflowViewState.IdRef="MessageBox_2" Text="[v_Retorno(1).ItemArray(0).toString + &quot; - &quot; + v_Retorno(1).ItemArray(1).toString]" />
+        <ui:MessageBox Caption="{x:Null}" ChosenButton="{x:Null}" DisplayName="Msg3 - Message Box" sap:VirtualizedContainerService.HintSize="334,58.6666666666667" sap2010:WorkflowViewState.IdRef="MessageBox_3" Text="[&quot;Coluna Inicial = &quot; + v_ColIniDados.toString]" />
       </Sequence>
     </FlowStep>
   </Flowchart>
